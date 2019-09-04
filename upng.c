@@ -881,10 +881,10 @@ static upng_format determine_format(upng_t* upng) {
 	}
 }
 
-static void upng_free_source(upng_t* upng)
+static void upng_free_source(upng_t *upng)
 {
 	if (upng->source.owning != 0) {
-		free((void*)upng->source.buffer);
+		free((void *)upng->source.buffer);
 	}
 
 	upng->source.buffer = NULL;
@@ -893,7 +893,7 @@ static void upng_free_source(upng_t* upng)
 }
 
 /*read the information from the header and store it in the upng_Info. return value is error*/
-upng_error upng_header(upng_t* upng)
+upng_error upng_header(upng_t *upng)
 {
 	/* if we have an error state, bail now */
 	if (upng->error != UPNG_EOK) {
@@ -964,8 +964,8 @@ upng_error upng_header(upng_t* upng)
 upng_error upng_decode(upng_t* upng)
 {
 	const unsigned char *chunk;
-	unsigned char* compressed;
-	unsigned char* inflated;
+	unsigned char *compressed;
+	unsigned char *inflated;
 	unsigned long compressed_size = 0, compressed_index = 0;
 	unsigned long inflated_size;
 	upng_error error;
@@ -1038,7 +1038,7 @@ upng_error upng_decode(upng_t* upng)
 	}
 
 	/* allocate enough space for the (compressed and filtered) image data */
-	compressed = (unsigned char*)malloc(compressed_size);
+	compressed = (unsigned char *)malloc(compressed_size);
 	if (compressed == NULL) {
 		SET_ERROR(upng, UPNG_ENOMEM);
 		return upng->error;
@@ -1067,7 +1067,7 @@ upng_error upng_decode(upng_t* upng)
 
 	/* allocate space to store inflated (but still filtered) data */
 	inflated_size = ((upng->width * (upng->height * upng_get_bpp(upng) + 7)) / 8) + upng->height;
-	inflated = (unsigned char*)malloc(inflated_size);
+	inflated = (unsigned char *)malloc(inflated_size);
 	if (inflated == NULL) {
 		free(compressed);
 		SET_ERROR(upng, UPNG_ENOMEM);
@@ -1087,7 +1087,7 @@ upng_error upng_decode(upng_t* upng)
 
 	/* allocate final image buffer */
 	upng->size = (upng->height * upng->width * upng_get_bpp(upng) + 7) / 8;
-	upng->buffer = (unsigned char*)malloc(upng->size);
+	upng->buffer = (unsigned char *)malloc(upng->size);
 	if (upng->buffer == NULL) {
 		free(inflated);
 		upng->size = 0;
@@ -1113,11 +1113,11 @@ upng_error upng_decode(upng_t* upng)
 	return upng->error;
 }
 
-static upng_t* upng_new(void)
+static upng_t *upng_new(void)
 {
-	upng_t* upng;
+	upng_t *upng;
 
-	upng = (upng_t*)malloc(sizeof(upng_t));
+	upng = (upng_t *)malloc(sizeof(upng_t));
 	if (upng == NULL) {
 		return NULL;
 	}
@@ -1143,9 +1143,9 @@ static upng_t* upng_new(void)
 	return upng;
 }
 
-upng_t* upng_new_from_bytes(const unsigned char* buffer, unsigned long size)
+upng_t *upng_new_from_bytes(const unsigned char *buffer, unsigned long size)
 {
-	upng_t* upng = upng_new();
+	upng_t *upng = upng_new();
 	if (upng == NULL) {
 		return NULL;
 	}
@@ -1157,9 +1157,9 @@ upng_t* upng_new_from_bytes(const unsigned char* buffer, unsigned long size)
 	return upng;
 }
 
-upng_t* upng_new_from_file(const char *filename)
+upng_t *upng_new_from_file(const char *filename)
 {
-	upng_t* upng;
+	upng_t *upng;
 	unsigned char *buffer;
 	FILE *file;
 	long size;
@@ -1198,7 +1198,7 @@ upng_t* upng_new_from_file(const char *filename)
 	return upng;
 }
 
-void upng_free(upng_t* upng)
+void upng_free(upng_t *upng)
 {
 	/* deallocate image buffer */
 	if (upng->buffer != NULL) {
@@ -1212,32 +1212,32 @@ void upng_free(upng_t* upng)
 	free(upng);
 }
 
-upng_error upng_get_error(const upng_t* upng)
+upng_error upng_get_error(const upng_t *upng)
 {
 	return upng->error;
 }
 
-unsigned upng_get_error_line(const upng_t* upng)
+unsigned upng_get_error_line(const upng_t *upng)
 {
 	return upng->error_line;
 }
 
-unsigned upng_get_width(const upng_t* upng)
+unsigned upng_get_width(const upng_t *upng)
 {
 	return upng->width;
 }
 
-unsigned upng_get_height(const upng_t* upng)
+unsigned upng_get_height(const upng_t *upng)
 {
 	return upng->height;
 }
 
-unsigned upng_get_bpp(const upng_t* upng)
+unsigned upng_get_bpp(const upng_t *upng)
 {
 	return upng_get_bitdepth(upng) * upng_get_components(upng);
 }
 
-unsigned upng_get_components(const upng_t* upng)
+unsigned upng_get_components(const upng_t *upng)
 {
 	switch (upng->color_type) {
 	case UPNG_LUM:
@@ -1253,29 +1253,29 @@ unsigned upng_get_components(const upng_t* upng)
 	}
 }
 
-unsigned upng_get_bitdepth(const upng_t* upng)
+unsigned upng_get_bitdepth(const upng_t *upng)
 {
 	return upng->color_depth;
 }
 
-unsigned upng_get_pixelsize(const upng_t* upng)
+unsigned upng_get_pixelsize(const upng_t *upng)
 {
 	unsigned bits = upng_get_bitdepth(upng) * upng_get_components(upng);
 	bits += bits % 8;
 	return bits;
 }
 
-upng_format upng_get_format(const upng_t* upng)
+upng_format upng_get_format(const upng_t *upng)
 {
 	return upng->format;
 }
 
-const unsigned char* upng_get_buffer(const upng_t* upng)
+const unsigned char *upng_get_buffer(const upng_t *upng)
 {
 	return upng->buffer;
 }
 
-unsigned upng_get_size(const upng_t* upng)
+unsigned upng_get_size(const upng_t *upng)
 {
 	return upng->size;
 }

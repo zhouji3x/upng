@@ -6,9 +6,9 @@
 #define HI(w) (((w) >> 8) & 0xFF)
 #define LO(w) ((w) & 0xFF)
 
-int main(int argc, char** argv) {
-	FILE* fh;
-	upng_t* upng;
+int main(int argc, char **argv) {
+	FILE *fh;
+	upng_t *upng;
 	unsigned width, height, depth;
 	unsigned x, y, d;
 
